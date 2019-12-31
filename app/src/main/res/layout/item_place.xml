@@ -23,6 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="کله پزی چنگیز و پسران"
+            android:textDirection="rtl"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView

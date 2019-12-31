@@ -14,11 +14,11 @@ class MapRepository @Inject constructor(
     private val networkHandler: NetworkHandler
 ) {
 
-    suspend fun getNearbyPlaces(lat: Double, long: Double): Result<List<PlaceView>>? {
+    suspend fun getNearbyPlaces(lat: Double, long: Double, limit: Int, offset: Int): Result<List<PlaceView>>? {
         var result: Result<List<PlaceView>>? = null
 
         if (networkHandler.hasNetworkConnection()) {
-            when (val remoteResponse = remoteDataSource.getNearbyPlaces(lat,long)) {
+            when (val remoteResponse = remoteDataSource.getNearbyPlaces(lat, long, limit, offset)) {
                 is Result.Success -> {
                     val placeEntities = mutableListOf<PlaceEntity>()
                     remoteResponse.data.response.groups[0].items.forEach {
@@ -30,7 +30,7 @@ class MapRepository @Inject constructor(
                             )
                         )
                     }
-                    result = Result.Success(placeEntities.map { it.toPlaceView() })
+                    result = Result.Success(placeEntities.map { it.toPlaceView() }.sortedBy { it.distance })
                     localDataSource.insertPlaces(placeEntities)
                 }
                 is Result.Error -> {

@@ -144,7 +144,7 @@ data class HereNow (
 
 	val count : Int,
 	val summary : String,
-	val groups : List<String>
+	val groups : List<HereNowGroups>
 )
 
 data class LabeledLatLngs (
@@ -160,4 +160,9 @@ data class Icon (
 	val suffix : String
 )
 
-
+data class HereNowGroups(
+	val type: String,
+	val name: String,
+	val count: Int,
+	val items: List<String>
+)

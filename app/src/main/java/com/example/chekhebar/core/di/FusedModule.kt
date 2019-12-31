@@ -15,12 +15,4 @@ class FusedModule {
     @Singleton
     fun provideFusedLocationClient(app: MapApp): FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(app.applicationContext)
-
-    @Provides
-    @Singleton
-    fun googleApiClient(app: MapApp) =
-        GoogleApiClient.Builder(app.applicationContext)
-            .addApi(LocationServices.API)
-            .build()
-
 }

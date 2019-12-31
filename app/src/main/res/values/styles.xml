@@ -11,7 +11,7 @@
     <style name="actionBarTitle" parent="Widget.MaterialComponents.TextView" >
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:fontFamily">@font/iran_yekan_bold</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="placeTitleTextView" parent="Widget.MaterialComponents.TextView" >

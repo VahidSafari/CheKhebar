@@ -5,9 +5,9 @@ import javax.inject.Inject
 import com.example.chekhebar.data.Result
 class MapRemoteDataSource @Inject constructor(private val mapService: MapService) {
 
-    suspend fun getNearbyPlaces(lat: Double, long: Double): Result<MainResponse>? {
+    suspend fun getNearbyPlaces(lat: Double, long: Double, limit: Int, offset: Int): Result<MainResponse>? {
         var result: Result<MainResponse>? = null
-        val serviceResponse = mapService.getNearbyPlaces("$lat,$long")
+        val serviceResponse = mapService.getNearbyPlaces("$lat,$long", limit, offset)
         when (serviceResponse.code()) {
             200 -> {
                 serviceResponse.body()?.let {
