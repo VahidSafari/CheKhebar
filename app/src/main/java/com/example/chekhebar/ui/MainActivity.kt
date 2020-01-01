@@ -4,11 +4,13 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.chekhebar.R
 import com.example.chekhebar.core.di.ViewModelFactory
 import com.example.chekhebar.data.Result
@@ -24,13 +26,63 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val LOCATION_REQUEST = 161
-    private lateinit var placeAdapter: PlaceAdapter
     lateinit var viewModel: MapViewModel
-    private val limit = 20
+    private val limit = 12
     private var offset = 0
-
-    private var isLastPage = false
+    private val VISIBLE_THRESHOLD = 2
     private var isLoading = false
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var placeAdapter: PlaceAdapter
+
+    private val pagingScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+//            if (!isLoading) {
+//                val visibleItemCount = layoutManager.childCount
+//                Log.e("++++", visibleItemCount.toString())
+//                val totalItemCount = layoutManager.itemCount
+//                Log.e("++++", totalItemCount.toString())
+//                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+//                Log.e("++++", lastVisibleItem.toString())
+//                if (visibleItemCount != 0 &&
+//                    visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount
+//                ) {
+//                    loadMorPlaces()
+//                    isLoading = true
+//                }
+//            }
+
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (!isLoading) {
+                    val visibleItemCount = layoutManager.childCount
+                    Log.e("++++ visible items: ", visibleItemCount.toString())
+                    val totalItemCount = layoutManager.itemCount
+                    Log.e("++++ total items: ", totalItemCount.toString())
+                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                    Log.e("++++ last visible item", lastVisibleItem.toString())
+                    if (visibleItemCount != 0 &&
+                        visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount
+                    ) {
+                        loadMorPlaces()
+                        isLoading = true
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun loadMorPlaces() {
+        offset += limit
+        getLocation()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,31 +90,20 @@ class MainActivity : DaggerAppCompatActivity() {
         swl_places.isRefreshing = true
         viewModel = viewModelFactory.create(MapViewModel::class.java)
 
-        rv_places.layoutManager = LinearLayoutManager(this)
+        recyclerView = findViewById(R.id.rv_places)
+        layoutManager = LinearLayoutManager(this)
         placeAdapter = PlaceAdapter()
-        rv_places.adapter = placeAdapter
-        rv_places.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        )
 
-        rv_places.addOnScrollListener(object : PaginationScrollListener(LinearLayoutManager(this)){
-            override var isLastPage: Boolean
-                get() = this@MainActivity.isLastPage
-                set(value) {}
-            override var isLoading: Boolean
-                get() = this@MainActivity.isLoading
-                set(value) {}
-
-            override fun loadMoreItems() {
-                isLoading = true
-                offset += limit
-                getLocation()
-            }
-
-        })
+        recyclerView.apply {
+            layoutManager = this@MainActivity.layoutManager
+            adapter = placeAdapter
+            addItemDecoration(
+                DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL)
+            )
+            addOnScrollListener(pagingScrollListener)
+        }
 
         viewModel.places.observe(this, Observer { result ->
-            isLoading = false
             when (result) {
                 is Result.Success -> {
                     val totalPlaceList = mutableListOf<PlaceView>().apply {
@@ -71,15 +112,14 @@ class MainActivity : DaggerAppCompatActivity() {
                         offset += limit
                     }
                     placeAdapter.submitList(totalPlaceList)
-                    isLastPage = true
                 }
                 is Result.Error -> {
-                    isLoading = false
                     placeAdapter.submitList(result.data)
                     Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
                 }
             }
             swl_places.isRefreshing = false
+            isLoading = false
         })
 
         if (!checkPermissions()) startLocationPermissionRequest() else getLocation()
@@ -129,5 +169,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun getPlaces(lat: Double, long: Double) {
         viewModel.getNearbyPlaces(lat, long, limit, offset)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        rv_places.removeOnScrollListener(pagingScrollListener)
     }
 }

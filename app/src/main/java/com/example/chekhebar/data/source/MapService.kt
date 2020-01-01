@@ -11,8 +11,8 @@ interface MapService {
         @Query("ll") latLong: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
-        @Query("client_id") clientId: String = "W00ZHLNRAT41DYG31IIUUQTI5FTHVGZI0NGCKMZHHPMTGZVX",
-        @Query("client_secret") clientSecret: String = "AA1KUV2Y2DHNSEKI20SIFB4JFK03UQ5KDVZAI5BU5I5QKTHH",
+        @Query("client_id") clientId: String = "C5BWYQRSL1EWPQ0IU3D22P3OSKVGHF3SLJJSQR2H0MTVQZAF",
+        @Query("client_secret") clientSecret: String = "KMMQQGDDXCFLYAOJRGUV1QDUWSQURMGAUV3NK0EJRWZ0OUQZ",
         @Query("v") version: String = "20180323"
     ): Response<MainResponse>
 }

@@ -9,28 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chekhebar.R
 import com.example.chekhebar.databinding.ItemPlaceBinding
 
-private object PlacesDiffUtillCallback : DiffUtil.ItemCallback<PlaceView>() {
+private object PlacesDiffUtilCallback : DiffUtil.ItemCallback<PlaceView>() {
     override fun areItemsTheSame(oldItem: PlaceView, newItem: PlaceView): Boolean {
         return (oldItem.id == newItem.id)
     }
 
     override fun areContentsTheSame(oldItem: PlaceView, newItem: PlaceView): Boolean {
         return (oldItem.name == oldItem.name &&
-                oldItem.distance == oldItem.distance
-                )
+                oldItem.distance == oldItem.distance)
     }
 
 }
 
-class PlaceAdapter :
-    ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(
-        PlacesDiffUtillCallback
-    ) {
+class PlaceAdapter : ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(PlacesDiffUtilCallback) {
 
-    inner class ViewHolder(icBinding: ItemPlaceBinding) :
-        RecyclerView.ViewHolder(icBinding.root) {
-        internal val holderBinding = icBinding
-    }
+    inner class ViewHolder(internal val holderBinding: ItemPlaceBinding) :
+        RecyclerView.ViewHolder(holderBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
