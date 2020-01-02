@@ -9,7 +9,7 @@ interface MapDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaces(placeList: List<PlaceEntity>)
 
-    @Query("SELECT * FROM places_table ORDER BY distance ASC")
+    @Query("SELECT * FROM places_table")
     suspend fun getAllPlaces(): List<PlaceEntity>
 
     @Query("DELETE FROM places_table")

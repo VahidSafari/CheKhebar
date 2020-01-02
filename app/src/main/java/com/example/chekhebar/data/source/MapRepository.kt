@@ -30,7 +30,7 @@ class MapRepository @Inject constructor(
                             )
                         )
                     }
-                    result = Result.Success(placeEntities.map { it.toPlaceView() }.sortedBy { it.distance })
+                    result = Result.Success(placeEntities.map { it.toPlaceView() })
                     localDataSource.insertPlaces(placeEntities)
                 }
                 is Result.Error -> {
