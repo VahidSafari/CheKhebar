@@ -41,6 +41,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private var offset = 0
     private val VISIBLE_THRESHOLD = 2
     private var isLoading = false
+    private var isInitialLoad = true
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
@@ -112,6 +113,7 @@ class MainActivity : DaggerAppCompatActivity() {
         viewModel.places.observe(this, Observer { result ->
             when (result) {
                 is Result.Success -> {
+                    isInitialLoad = false
                     val totalPlaceList = mutableListOf<PlaceView>().apply {
                         addAll(placeAdapter.currentList)
                         addAll(result.data)
@@ -186,18 +188,6 @@ class MainActivity : DaggerAppCompatActivity() {
             startLocationUpdates()
         }
     }
-
-//    private fun getLocation() {
-//        fusedLocationProviderClient.lastLocation
-//            .addOnCompleteListener { taskLocation ->
-//                if (taskLocation.isSuccessful && taskLocation.result != null) {
-//                    taskLocation.result?.let {
-//                        currentLocation = it
-//                    }
-//                }
-//            }
-//    }
-
 
     private fun createLocationCallback() {
         locationCallback = object : LocationCallback() {
@@ -275,7 +265,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun getPlaces(lat: Double, long: Double) {
-        viewModel.getNearbyPlaces(lat, long, limit, offset)
+        viewModel.getNearbyPlaces(lat, long, limit, offset, isInitialLoad)
     }
 
     override fun onResume() {

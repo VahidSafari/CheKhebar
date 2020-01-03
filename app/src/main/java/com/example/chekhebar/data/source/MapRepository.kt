@@ -4,8 +4,6 @@ import com.example.chekhebar.core.network.NetworkHandler
 import com.example.chekhebar.data.PlaceEntity
 import com.example.chekhebar.data.Result
 import com.example.chekhebar.ui.PlaceView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MapRepository @Inject constructor(
@@ -14,7 +12,13 @@ class MapRepository @Inject constructor(
     private val networkHandler: NetworkHandler
 ) {
 
-    suspend fun getNearbyPlaces(lat: Double, long: Double, limit: Int, offset: Int): Result<List<PlaceView>>? {
+    suspend fun getNearbyPlaces(
+        lat: Double,
+        long: Double,
+        limit: Int,
+        offset: Int,
+        isInitialLoad: Boolean
+    ): Result<List<PlaceView>>? {
         var result: Result<List<PlaceView>>? = null
 
         if (networkHandler.hasNetworkConnection()) {
@@ -30,8 +34,13 @@ class MapRepository @Inject constructor(
                             )
                         )
                     }
-                    result = Result.Success(placeEntities.map { it.toPlaceView() })
+                    if (isInitialLoad)
+                        localDataSource.removeAllPlaces()
                     localDataSource.insertPlaces(placeEntities)
+                    result =
+                        if (isInitialLoad)
+                            Result.Success(localDataSource.getAllPlaces().map { it.toPlaceView() })
+                        else Result.Success(placeEntities.map { it.toPlaceView() })
                 }
                 is Result.Error -> {
                     result = Result.Error(

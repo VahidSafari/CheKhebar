@@ -9,14 +9,20 @@ import com.example.chekhebar.data.source.MapRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MapViewModel @Inject constructor(private val mapRepository: MapRepository): ViewModel() {
+class MapViewModel @Inject constructor(private val mapRepository: MapRepository) : ViewModel() {
 
     private val _places: MutableLiveData<Result<List<PlaceView>>?> = MutableLiveData()
     val places: LiveData<Result<List<PlaceView>>?>
-    get() = _places
+        get() = _places
 
-    fun getNearbyPlaces(lat: Double, long: Double, limit: Int, offset: Int) = viewModelScope.launch {
-        _places.value = mapRepository.getNearbyPlaces(lat, long, limit, offset)
+    fun getNearbyPlaces(
+        lat: Double,
+        long: Double,
+        limit: Int,
+        offset: Int,
+        isInitialLoad: Boolean
+    ) = viewModelScope.launch {
+        _places.value = mapRepository.getNearbyPlaces(lat, long, limit, offset, isInitialLoad)
     }
 
 }
