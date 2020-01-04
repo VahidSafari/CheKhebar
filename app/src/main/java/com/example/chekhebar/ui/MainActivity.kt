@@ -26,6 +26,7 @@ import java.text.DateFormat
 import java.util.*
 import javax.inject.Inject
 
+@Suppress("PrivatePropertyName")
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
@@ -37,9 +38,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private val LOCATION_REQUEST = 161
     lateinit var viewModel: MapViewModel
-    private val limit = 12
-    private var offset = 0
-    private val VISIBLE_THRESHOLD = 2
+    private val REQUEST_LIMIT = 15
+    private var REQUEST_OFFSET = 0
     private var isLoading = false
     private var isInitialLoad = true
 
@@ -53,8 +53,9 @@ class MainActivity : DaggerAppCompatActivity() {
     private lateinit var locationSettingsRequest: LocationSettingsRequest
     private lateinit var locationCallback: LocationCallback
     private var lastUpdateTime: String? = null
-    private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 10000
-    private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long = UPDATE_INTERVAL_IN_MILLISECONDS / 2
+    private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 60000
+    private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long =
+        UPDATE_INTERVAL_IN_MILLISECONDS * 3 / 2
     private val REQUEST_CHECK_SETTINGS = 120
 
     private val KEY_REQUESTING_LOCATION_UPDATES = "requesting-location-updates"
@@ -63,31 +64,47 @@ class MainActivity : DaggerAppCompatActivity() {
 
 
     private val pagingScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (!isLoading) {
-                    val visibleItemCount = layoutManager.childCount
-                    Log.e("++++ visible items: ", visibleItemCount.toString())
-                    val totalItemCount = layoutManager.itemCount
-                    Log.e("++++ total items: ", totalItemCount.toString())
-                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-                    Log.e("++++ last visible item", lastVisibleItem.toString())
-                    if (visibleItemCount != 0 &&
-                        visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount
-                    ) {
-                        isLoading = true
-                        loadMorPlaces()
-                    }
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (!isLoading) {
+                val visibleItemCount = layoutManager.childCount
+                Log.e(":| VISIBLE ITEMS:     ", visibleItemCount.toString())
+                val totalItemCount = layoutManager.itemCount
+                Log.e(":| TOTAL ITEMS:       ", totalItemCount.toString())
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                Log.e(":| LAST VISIBLE ITEM: ", lastVisibleItem.toString())
+                if (lastVisibleItem + 1 >= totalItemCount ) {
+                    isLoading = true
+                    loadMorePlaces()
                 }
             }
         }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+//            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                if (!isLoading) {
+//                    val visibleItemCount = layoutManager.childCount
+//                    Log.e("++++ visible items: ", visibleItemCount.toString())
+//                    val totalItemCount = layoutManager.itemCount
+//                    Log.e("++++ total items: ", totalItemCount.toString())
+//                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+//                    Log.e("++++ last visible item", lastVisibleItem.toString())
+//                    if (visibleItemCount != 0 &&
+//                        visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount
+//                    ) {
+//                        isLoading = true
+//                        loadMorPlaces()
+//                    }
+//                }
+//            }
+        }
     }
 
-    private fun loadMorPlaces() {
-        offset += limit
+    private fun loadMorePlaces() {
+        REQUEST_OFFSET += REQUEST_LIMIT
         currentLocation?.let {
-            getPlaces(it.latitude, it.longitude)
+            getPlaces()
         }
     }
 
@@ -117,7 +134,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     val totalPlaceList = mutableListOf<PlaceView>().apply {
                         addAll(placeAdapter.currentList)
                         addAll(result.data)
-                        offset += limit
+                        REQUEST_OFFSET += REQUEST_LIMIT + 1
                     }
                     placeAdapter.submitList(totalPlaceList)
                 }
@@ -135,6 +152,7 @@ class MainActivity : DaggerAppCompatActivity() {
         createLocationCallback()
         createLocationRequest()
         buildLocationSettingsRequest()
+        swl_places.setOnRefreshListener(::getPlaces)
     }
 
     private fun updateValuesFromBundle(savedInstanceState: Bundle?) {
@@ -149,14 +167,14 @@ class MainActivity : DaggerAppCompatActivity() {
 
             if (savedInstanceState.keySet().contains(KEY_LOCATION)) {
                 currentLocation =
-                    savedInstanceState.getParcelable<Location>(KEY_LOCATION)
+                    savedInstanceState.getParcelable(KEY_LOCATION)
             }
             if (savedInstanceState.keySet().contains(KEY_LAST_UPDATED_TIME_STRING)) {
                 lastUpdateTime =
                     savedInstanceState.getString(KEY_LAST_UPDATED_TIME_STRING)
             }
             currentLocation?.let {
-                getPlaces(it.latitude, it.longitude)
+                getPlaces()
             }
         }
     }
@@ -196,7 +214,8 @@ class MainActivity : DaggerAppCompatActivity() {
                 currentLocation = locationResult.lastLocation
                 lastUpdateTime = DateFormat.getTimeInstance().format(Date())
                 currentLocation?.let {
-                    getPlaces(it.latitude, it.longitude)
+                    if (!isLoading)
+                        getPlaces()
                 }
             }
         }
@@ -226,7 +245,8 @@ class MainActivity : DaggerAppCompatActivity() {
                 )
 
                 currentLocation?.let {
-                    getPlaces(it.latitude, it.longitude)
+                    if (!isLoading)
+                        getPlaces()
                 }
             }.addOnFailureListener { e ->
                 when ((e as ApiException).statusCode) {
@@ -238,6 +258,7 @@ class MainActivity : DaggerAppCompatActivity() {
                         )
                         try {
                             val rae = e as ResolvableApiException
+
                             rae.startResolutionForResult(
                                 this,
                                 REQUEST_CHECK_SETTINGS
@@ -259,13 +280,22 @@ class MainActivity : DaggerAppCompatActivity() {
                     }
                 }
                 currentLocation?.let {
-                    getPlaces(it.latitude, it.longitude)
+                    if (!isLoading)
+                        getPlaces()
                 }
             }
     }
 
-    private fun getPlaces(lat: Double, long: Double) {
-        viewModel.getNearbyPlaces(lat, long, limit, offset, isInitialLoad)
+    private fun getPlaces() {
+        currentLocation?.let {
+            viewModel.getNearbyPlaces(
+                it.latitude,
+                it.longitude,
+                REQUEST_LIMIT,
+                REQUEST_OFFSET,
+                isInitialLoad
+            )
+        }
     }
 
     override fun onResume() {
@@ -275,7 +305,6 @@ class MainActivity : DaggerAppCompatActivity() {
         } else if (!checkPermissions()) {
             startLocationPermissionRequest()
         }
-
     }
 
     override fun onDestroy() {
