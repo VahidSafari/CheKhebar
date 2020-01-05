@@ -1,101 +1,262 @@
-/* 
-Copyright (c) 2020 Kotlin Data Classes Generated from JSON powered by http://www.json2kotlin.com
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
 
-data class PlaceEntity (
+data class PlaceDetailResponse (
 
-	val meta : Meta,
-	val response : Response
+    val meta : DetailMeta,
+    val response : DetailResponse
 )
 
-data class Meta (
+data class DetailMeta (
 
-	val code : Int,
-	val requestId : String
+    val code : Int,
+    val requestId : String
 )
 
-data class Response (
+data class DetailResponse (
 
-	val venue : Venue
+    val venue : DetailVenue
 )
 
-data class Venue (
+data class DetailVenue (
 
-	val id : String,
-	val name : String,
-	val contact : Contact,
-	val location : Location,
-	val canonicalUrl : String,
-	val categories : List<Categories>,
-	val verified : Boolean,
-	val stats : Stats,
-	val likes : Likes,
-	val dislike : Boolean,
-	val ok : Boolean,
-	val rating : Double,
-	val ratingColor : String,
-	val ratingSignals : Int,
-	val allowMenuUrlEdit : Boolean,
-	val beenHere : BeenHere,
-	val specials : Specials,
-	val photos : Photos,
-	val reasons : Reasons,
-	val hereNow : HereNow,
-	val createdAt : Int,
-	val tips : Tips,
-	val shortUrl : String,
-	val timeZone : String,
-	val listed : Listed,
-	val pageUpdates : PageUpdates,
-	val inbox : Inbox,
-	val venueChains : List<String>,
-	val attributes : Attributes,
-	val bestPhoto : BestPhoto,
-	val colors : Colors
+    val id : String,
+    val name : String,
+    val contact : DetailContact,
+    val location : DetailLocation,
+    val canonicalUrl : String,
+    val categories : List<DetailCategories>,
+    val verified : Boolean,
+    val stats : DetailStats,
+    val likes : Likes,
+    val dislike : Boolean,
+    val ok : Boolean,
+    val rating : Double,
+    val ratingColor : String,
+    val ratingSignals : Int,
+    val allowMenuUrlEdit : Boolean,
+    val beenHere : DetailBeenHere,
+    val specials : DetailSpecials,
+    val photos : DetailPhotos,
+    val reasons : Reasons,
+    val hereNow : HereNow,
+    val createdAt : Int,
+    val tips : Tips,
+    val shortUrl : String,
+    val timeZone : String,
+    val listed : Listed,
+    val pageUpdates : PageUpdates,
+    val inbox : Inbox,
+    val venueChains : List<String>,
+    val attributes : Attributes,
+    val bestPhoto : BestPhoto,
+    val colors : Colors
 )
 
-data class Contact (
+data class DetailContact (
 
-	val phone : Int,
-	val formattedPhone : String
+    val phone : Int,
+    val formattedPhone : String
 )
 
-data class Location (
+data class DetailLocation (
 
-	val address : String,
-	val lat : Double,
-	val lng : Double,
-	val labeledLatLngs : List<LabeledLatLngs>,
-	val cc : String,
-	val neighborhood : String,
-	val city : String,
-	val state : String,
-	val country : String,
-	val formattedAddress : List<String>
+    val address : String,
+    val lat : Double,
+    val lng : Double,
+    val labeledLatLngs : List<LabeledLatLngs>,
+    val cc : String,
+    val neighborhood : String,
+    val city : String,
+    val state : String,
+    val country : String,
+    val formattedAddress : List<String>
 )
 
-data class Categories (
+data class DetailCategories (
 
-	val id : String,
-	val name : String,
-	val pluralName : String,
-	val shortName : String,
-	val icon : Icon,
-	val primary : Boolean
+    val id : String,
+    val name : String,
+    val pluralName : String,
+    val shortName : String,
+    val icon : Icon,
+    val primary : Boolean
 )
 
-data class Stats (
+data class DetailStats (
 
-	val tipCount : Int,
-	val usersCount : Int,
-	val checkinsCount : Int,
-	val visitsCount : Int
+    val tipCount : Int,
+    val usersCount : Int,
+    val checkinsCount : Int,
+    val visitsCount : Int
+)
+
+data class Likes (
+
+    val count : Int,
+    val groups : List<Groups>,
+    val summary : String
+)
+
+data class DetailBeenHere (
+
+    val count : Int,
+    val unconfirmedCount : Int,
+    val marked : Boolean,
+    val lastCheckinExpiredAt : Int
+)
+
+data class DetailSpecials (
+
+    val count : Int,
+    val items : List<String>
+)
+
+data class DetailPhotos (
+
+    val count : Int,
+    val groups : List<Groups>
+)
+
+data class Reasons (
+
+    val count : Int,
+    val items : List<Items>
+)
+
+data class HereNow (
+
+    val count : Int,
+    val summary : String,
+    val groups : List<String>
+)
+
+data class Tips (
+
+    val count : Int,
+    val groups : List<Groups>
+)
+
+data class Listed (
+
+    val count : Int,
+    val groups : List<Groups>
+)
+
+data class PageUpdates (
+
+    val count : Int,
+    val items : List<String>
+)
+
+data class Inbox (
+
+    val count : Int,
+    val items : List<String>
+)
+
+data class Attributes (
+
+    val groups : List<Groups>
+)
+
+data class BestPhoto (
+
+    val id : String,
+    val createdAt : Int,
+    val source : Source,
+    val prefix : String,
+    val suffix : String,
+    val width : Int,
+    val height : Int,
+    val visibility : String
+)
+
+data class Colors (
+
+    val highlightColor : HighlightColor,
+    val highlightTextColor : HighlightTextColor,
+    val algoVersion : Int
+)
+
+data class LabeledLatLngs (
+
+    val label : String,
+    val lat : Double,
+    val lng : Double
+)
+
+data class Icon (
+
+    val prefix : String,
+    val suffix : String
+)
+
+data class Groups (
+
+    val type : String,
+    val name : String,
+    val summary : String,
+    val count : Int,
+    val items : List<Items>
+)
+
+data class HighlightColor (
+
+    val photoId : String,
+    val value : Int
+)
+
+data class Followers (
+
+    val count : Int
+)
+
+
+data class HighlightTextColor (
+
+    val photoId : String,
+    val value : Int
+)
+
+data class Items (
+
+    val displayName : String,
+    val displayValue : String
+)
+
+data class ListItems (
+
+    val count : Int,
+    val items : List<Items>
+)
+
+data class Photo (
+
+    val id : String,
+    val createdAt : Int,
+    val prefix : String,
+    val suffix : String,
+    val width : Int,
+    val height : Int,
+    val user : User,
+    val visibility : String
+)
+
+data class Source (
+
+    val name : String,
+    val url : String
+)
+
+data class Todo (
+
+    val count : Int
+)
+
+data class User (
+
+    val id : Int,
+    val firstName : String,
+    val gender : String,
+    val photo : Photo
 )
