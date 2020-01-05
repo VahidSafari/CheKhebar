@@ -15,6 +15,10 @@ class MapViewModel @Inject constructor(private val mapRepository: MapRepository)
     val places: LiveData<Result<List<PlaceView>>?>
         get() = _places
 
+    private val _placeDetail: MutableLiveData<Result<PlaceDetailView?>?> = MutableLiveData()
+    val placeDetail: LiveData<Result<PlaceDetailView?>?>
+    get() = _placeDetail
+
     fun getNearbyPlaces(
         lat: Double,
         long: Double,
@@ -23,6 +27,10 @@ class MapViewModel @Inject constructor(private val mapRepository: MapRepository)
         isInitialLoad: Boolean
     ) = viewModelScope.launch {
         _places.value = mapRepository.getNearbyPlaces(lat, long, limit, offset, isInitialLoad)
+    }
+
+    fun getPlaceDetail(placeId: String) = viewModelScope.launch {
+        _placeDetail.value = mapRepository.getPlaceDetail(placeId)
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.chekhebar.ui
 
-data class PlaceView(
-    val id: String,
-    val name: String,
-    val distance: Int
+open class PlaceView(
+    open val id: String,
+    open val name: String,
+    open val distance: Int
 )

@@ -7,18 +7,22 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
 
 @Module
 class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient() =
-        OkHttpClient.Builder()
+    fun provideOkHttpClient(): OkHttpClient {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
@@ -29,13 +33,15 @@ class RetrofitModule {
                     .build()
                 chain.proceed(request)
             }
+            .addInterceptor(interceptor)
             .build()
-
+    }
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://api.foursquare.com/")
+            .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 

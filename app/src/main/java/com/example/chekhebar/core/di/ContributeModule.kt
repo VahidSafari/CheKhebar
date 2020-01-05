@@ -5,6 +5,7 @@ import com.example.chekhebar.data.source.MapRemoteDataSource
 import com.example.chekhebar.data.source.MapRepository
 import com.example.chekhebar.ui.MainActivity
 import com.example.chekhebar.ui.MapViewModel
+import com.example.chekhebar.ui.PlaceDetailActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -25,5 +26,8 @@ interface ContributeModule {
 
     @ContributesAndroidInjector
     fun contributeViewModel(): MapViewModel
+
+    @ContributesAndroidInjector
+    fun contributePlaceDetailActivity(): PlaceDetailActivity
 
 }

@@ -2,6 +2,7 @@ package com.example.chekhebar.ui
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
@@ -27,7 +28,7 @@ import java.util.*
 import javax.inject.Inject
 
 @Suppress("PrivatePropertyName")
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -79,26 +80,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
         }
-
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-//            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                if (!isLoading) {
-//                    val visibleItemCount = layoutManager.childCount
-//                    Log.e("++++ visible items: ", visibleItemCount.toString())
-//                    val totalItemCount = layoutManager.itemCount
-//                    Log.e("++++ total items: ", totalItemCount.toString())
-//                    val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
-//                    Log.e("++++ last visible item", lastVisibleItem.toString())
-//                    if (visibleItemCount != 0 &&
-//                        visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount
-//                    ) {
-//                        isLoading = true
-//                        loadMorPlaces()
-//                    }
-//                }
-//            }
-        }
     }
 
     private fun loadMorePlaces() {
@@ -116,7 +97,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         recyclerView = findViewById(R.id.rv_places)
         layoutManager = LinearLayoutManager(this)
-        placeAdapter = PlaceAdapter()
+        placeAdapter = PlaceAdapter(this)
 
         recyclerView.apply {
             layoutManager = this@MainActivity.layoutManager
@@ -322,5 +303,14 @@ class MainActivity : DaggerAppCompatActivity() {
             .addOnCompleteListener(this) {
                 requestingLocationUpdate = false
             }
+    }
+
+    override fun openDetailActivity(placeId: String, distance: Int) {
+        startActivity(
+            Intent(this, PlaceDetailActivity::class.java).apply {
+                putExtra("placeId",placeId)
+                putExtra("distance", distance)
+            }
+        )
     }
 }

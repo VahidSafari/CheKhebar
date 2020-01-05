@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="placeDetailView"
+            type="com.example.chekhebar.ui.PlaceDetailView" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.PlaceDetailActivity">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_detail_title"
+            style="@style/placeTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@{placeDetailView.name}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_detail_distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="املت مش قنبر" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_detail_distance"
+            style="@style/placeTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(placeDetailView.distance)}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_detail_phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_title"
+            tools:text="۱۲۰۰۰۰ متر" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_detail_phone"
+            style="@style/placeTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@{placeDetailView.phoneNumber}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_detail_rating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_distance"
+            tools:text="09151832121" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_detail_rating"
+            style="@style/placeTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{String.valueOf(placeDetailView.rating)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_phone"
+            tools:text="9.8" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

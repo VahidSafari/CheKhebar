@@ -1,4 +1,4 @@
-
+package com.example.chekhebar.data
 
 data class PlaceDetailResponse (
 
@@ -9,6 +9,8 @@ data class PlaceDetailResponse (
 data class DetailMeta (
 
     val code : Int,
+    val errorType: String? = null,
+    val errorDetail: String? = null,
     val requestId : String
 )
 
@@ -37,33 +39,33 @@ data class DetailVenue (
     val beenHere : DetailBeenHere,
     val specials : DetailSpecials,
     val photos : DetailPhotos,
-    val reasons : Reasons,
-    val hereNow : HereNow,
+    val reasons : DetailReasons,
+    val hereNow : DetailHereNow,
     val createdAt : Int,
-    val tips : Tips,
+    val tips : DetailTips,
     val shortUrl : String,
     val timeZone : String,
-    val listed : Listed,
-    val pageUpdates : PageUpdates,
-    val inbox : Inbox,
+    val listed : DetailListed,
+    val pageUpdates : DetailPageUpdates,
+    val inbox : DetailInbox,
     val venueChains : List<String>,
-    val attributes : Attributes,
-    val bestPhoto : BestPhoto,
-    val colors : Colors
+    val attributes : DetailAttributes,
+    val bestPhoto : DetailBestPhoto,
+    val colors : DetailColors
 )
 
 data class DetailContact (
 
-    val phone : Int,
-    val formattedPhone : String
+    val phone : String?,
+    val formattedPhone : String?
 )
 
 data class DetailLocation (
 
-    val address : String,
+    val address : String?,
     val lat : Double,
     val lng : Double,
-    val labeledLatLngs : List<LabeledLatLngs>,
+    val labeledLatLngs : List<DetailLabeledLatLngs>,
     val cc : String,
     val neighborhood : String,
     val city : String,
@@ -78,7 +80,7 @@ data class DetailCategories (
     val name : String,
     val pluralName : String,
     val shortName : String,
-    val icon : Icon,
+    val icon : DetailIcon,
     val primary : Boolean
 )
 
@@ -93,7 +95,7 @@ data class DetailStats (
 data class Likes (
 
     val count : Int,
-    val groups : List<Groups>,
+    val groups : List<DetailGroups>,
     val summary : String
 )
 
@@ -114,52 +116,52 @@ data class DetailSpecials (
 data class DetailPhotos (
 
     val count : Int,
-    val groups : List<Groups>
+    val groups : List<DetailGroups>
 )
 
-data class Reasons (
+data class DetailReasons (
 
     val count : Int,
-    val items : List<Items>
+    val items : List<DetailItems>
 )
 
-data class HereNow (
+data class DetailHereNow (
 
     val count : Int,
     val summary : String,
     val groups : List<String>
 )
 
-data class Tips (
+data class DetailTips (
 
     val count : Int,
-    val groups : List<Groups>
+    val groups : List<DetailGroups>
 )
 
-data class Listed (
+data class DetailListed (
 
     val count : Int,
-    val groups : List<Groups>
+    val groups : List<DetailGroups>
 )
 
-data class PageUpdates (
-
-    val count : Int,
-    val items : List<String>
-)
-
-data class Inbox (
+data class DetailPageUpdates (
 
     val count : Int,
     val items : List<String>
 )
 
-data class Attributes (
+data class DetailInbox (
 
-    val groups : List<Groups>
+    val count : Int,
+    val items : List<String>
 )
 
-data class BestPhoto (
+data class DetailAttributes (
+
+    val groups : List<DetailGroups>
+)
+
+data class DetailBestPhoto (
 
     val id : String,
     val createdAt : Int,
@@ -171,54 +173,54 @@ data class BestPhoto (
     val visibility : String
 )
 
-data class Colors (
+data class DetailColors (
 
-    val highlightColor : HighlightColor,
-    val highlightTextColor : HighlightTextColor,
+    val highlightColor : DetailHighlightColor,
+    val highlightTextColor : DetailHighlightTextColor,
     val algoVersion : Int
 )
 
-data class LabeledLatLngs (
+data class DetailLabeledLatLngs (
 
     val label : String,
     val lat : Double,
     val lng : Double
 )
 
-data class Icon (
+data class DetailIcon (
 
     val prefix : String,
     val suffix : String
 )
 
-data class Groups (
+data class DetailGroups (
 
     val type : String,
     val name : String,
     val summary : String,
     val count : Int,
-    val items : List<Items>
+    val items : List<DetailItems>
 )
 
-data class HighlightColor (
+data class DetailHighlightColor (
 
     val photoId : String,
     val value : Int
 )
 
-data class Followers (
+data class DetailFollowers (
 
     val count : Int
 )
 
 
-data class HighlightTextColor (
+data class DetailHighlightTextColor (
 
     val photoId : String,
     val value : Int
 )
 
-data class Items (
+data class DetailItems (
 
     val displayName : String,
     val displayValue : String
@@ -227,7 +229,7 @@ data class Items (
 data class ListItems (
 
     val count : Int,
-    val items : List<Items>
+    val items : List<DetailItems>
 )
 
 data class Photo (

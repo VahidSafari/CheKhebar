@@ -21,7 +21,9 @@ private object PlacesDiffUtilCallback : DiffUtil.ItemCallback<PlaceView>() {
 
 }
 
-class PlaceAdapter : ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(PlacesDiffUtilCallback) {
+class PlaceAdapter(
+    private val openDetailActivity: IOpenDetailActivity
+) : ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(PlacesDiffUtilCallback) {
 
     inner class ViewHolder(internal val holderBinding: ItemPlaceBinding) :
         RecyclerView.ViewHolder(holderBinding.root)
@@ -38,7 +40,11 @@ class PlaceAdapter : ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(PlacesDiffU
         holder.itemView.tag = getItem(position)
         holder.holderBinding.placeView = item
         holder.itemView.setOnClickListener {
-
+            openDetailActivity.openDetailActivity(item.id, item.distance)
         }
+    }
+
+    interface IOpenDetailActivity {
+        fun openDetailActivity(placeId: String, distance: Int)
     }
 }
