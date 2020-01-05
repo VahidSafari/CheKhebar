@@ -37,5 +37,8 @@ class PlaceAdapter : ListAdapter<PlaceView, PlaceAdapter.ViewHolder>(PlacesDiffU
         val item = getItem(position)
         holder.itemView.tag = getItem(position)
         holder.holderBinding.placeView = item
+        holder.itemView.setOnClickListener {
+
+        }
     }
 }
