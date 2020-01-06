@@ -15,9 +15,8 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MapViewModel::class)
-    abstract fun contributeViewModel(mapViewModel: MapViewModel): ViewModel
+    abstract fun contributeMapViewModel(mapViewModel: MapViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
-
 }

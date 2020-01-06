@@ -11,7 +11,9 @@ class PlaceEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    val distance: Int
+    val distance: Int,
+    val address: String,
+    val category: String
 ) {
-    fun toPlaceView() = PlaceView(id, name, distance)
+    fun toPlaceView() = PlaceView(id, name, distance, address, category)
 }

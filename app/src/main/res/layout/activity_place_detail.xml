@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="placeDetailView"
-            type="com.example.chekhebar.ui.PlaceDetailView" />
+            name="placeView"
+            type="com.example.chekhebar.ui.PlaceView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,14 +15,49 @@
         android:layout_height="match_parent"
         tools:context=".ui.PlaceDetailActivity">
 
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/bap_place_detail"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_place_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/place_specification"
+                    android:textAppearance="@style/actionBarTitle" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_detail_title"
             style="@style/placeTitleTextView"
+            extractPersianString="@{placeView.name}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="@{placeDetailView.name}"
             app:layout_constraintBottom_toTopOf="@+id/tv_detail_distance"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,14 +65,16 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="املت مش قنبر" />
 
+
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_detail_distance"
             style="@style/placeTitleTextView"
+            setDistance="@{placeView.distance}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="@{String.valueOf(placeDetailView.distance)}"
             app:layout_constraintBottom_toTopOf="@+id/tv_detail_phone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -52,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="@{placeDetailView.phoneNumber}"
+            android:text="@{placeView.address}"
             app:layout_constraintBottom_toTopOf="@+id/tv_detail_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -66,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{String.valueOf(placeDetailView.rating)}"
+            android:text="@{placeView.category}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

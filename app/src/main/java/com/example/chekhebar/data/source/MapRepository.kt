@@ -1,10 +1,8 @@
 package com.example.chekhebar.data.source
 
 import com.example.chekhebar.core.network.NetworkHandler
-import com.example.chekhebar.data.PlaceDetailResponse
 import com.example.chekhebar.data.PlaceEntity
 import com.example.chekhebar.data.Result
-import com.example.chekhebar.ui.PlaceDetailView
 import com.example.chekhebar.ui.PlaceView
 import javax.inject.Inject
 
@@ -32,7 +30,9 @@ class MapRepository @Inject constructor(
                             PlaceEntity(
                                 it.venue.id,
                                 it.venue.name,
-                                it.venue.location.distance
+                                it.venue.location.distance,
+                                it.venue.location.formattedAddress[0],
+                                it.venue.categories[0].name
                             )
                         )
                     }
@@ -52,36 +52,9 @@ class MapRepository @Inject constructor(
             }
         } else {
             result = Result.Error(
-                "No network connection :|",
+                "خطا در اتصال به اینترنت",
                 localDataSource.getAllPlaces().map { it.toPlaceView() })
         }
         return result
     }
-
-    suspend fun getPlaceDetail(placeId: String): Result<PlaceDetailView?>? {
-        var result: Result<PlaceDetailView?>? = null
-        if (networkHandler.hasNetworkConnection()) {
-            when (val remoteResponse = remoteDataSource.getPlaceDetail(placeId)) {
-                is Result.Success -> {
-                    result = Result.Success(
-                        PlaceDetailView(
-                            placeId,
-                            remoteResponse.data.response.venue.name,
-                            0,
-                            remoteResponse.data.response.venue.contact.formattedPhone?:"",
-                            remoteResponse.data.response.venue.rating,
-                            remoteResponse.data.response.venue.ratingColor
-                        )
-                    )
-                }
-                is Result.Error -> {
-                    result = Result.Error(remoteResponse.message)
-                }
-            }
-        } else {
-            result = Result.Error("No network connection :|")
-        }
-        return result
-    }
-
 }

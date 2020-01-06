@@ -27,7 +27,4 @@ interface ContributeModule {
     @ContributesAndroidInjector
     fun contributeViewModel(): MapViewModel
 
-    @ContributesAndroidInjector
-    fun contributePlaceDetailActivity(): PlaceDetailActivity
-
 }

@@ -144,7 +144,7 @@ data class HereNow (
 
 	val count : Int,
 	val summary : String,
-	val groups : List<HereNowGroups>
+	val groups : List<HereNowGroups>?
 )
 
 data class LabeledLatLngs (

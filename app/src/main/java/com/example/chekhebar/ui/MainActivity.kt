@@ -54,7 +54,7 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
     private lateinit var locationSettingsRequest: LocationSettingsRequest
     private lateinit var locationCallback: LocationCallback
     private var lastUpdateTime: String? = null
-    private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 60000
+    private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 30000
     private val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS: Long =
         UPDATE_INTERVAL_IN_MILLISECONDS * 3 / 2
     private val REQUEST_CHECK_SETTINGS = 120
@@ -63,18 +63,19 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
     private val KEY_LOCATION = "location"
     private val KEY_LAST_UPDATED_TIME_STRING = "last-updated-time-string"
 
+    private val VISIBLE_THRESHOLD = 1
 
     private val pagingScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            if (!isLoading) {
+            if (!isLoading && dy > 0) {
                 val visibleItemCount = layoutManager.childCount
                 Log.e(":| VISIBLE ITEMS:     ", visibleItemCount.toString())
                 val totalItemCount = layoutManager.itemCount
                 Log.e(":| TOTAL ITEMS:       ", totalItemCount.toString())
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 Log.e(":| LAST VISIBLE ITEM: ", lastVisibleItem.toString())
-                if (lastVisibleItem + 1 >= totalItemCount ) {
+                if (lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount) {
                     isLoading = true
                     loadMorePlaces()
                 }
@@ -118,6 +119,11 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
                         REQUEST_OFFSET += REQUEST_LIMIT + 1
                     }
                     placeAdapter.submitList(totalPlaceList)
+                    Toast.makeText(
+                        this,
+                        "لیست با موفقیت بروزرسانی شد",
+                        Toast.LENGTH_LONG
+                    )
                 }
                 is Result.Error -> {
                     placeAdapter.submitList(result.data)
@@ -134,6 +140,9 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
         createLocationRequest()
         buildLocationSettingsRequest()
         swl_places.setOnRefreshListener(::getPlaces)
+        fab_get_current_location.setOnClickListener {
+            startLocationUpdates()
+        }
     }
 
     private fun updateValuesFromBundle(savedInstanceState: Bundle?) {
@@ -219,6 +228,11 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
     private fun startLocationUpdates() {
         settingsClient.checkLocationSettings(locationSettingsRequest)
             .addOnSuccessListener(this) {
+                Toast.makeText(
+                    this,
+                    "موقعیت مکانی بروزرسانی شد",
+                    Toast.LENGTH_LONG
+                ).show()
                 fusedLocationProviderClient.requestLocationUpdates(
                     locationRequest,
                     locationCallback,
@@ -305,12 +319,23 @@ class MainActivity : DaggerAppCompatActivity(), PlaceAdapter.IOpenDetailActivity
             }
     }
 
-    override fun openDetailActivity(placeId: String, distance: Int) {
+    override fun openDetailActivity(
+        placeId: String,
+        name: String,
+        distance: Int,
+        address: String,
+        category: String
+    ) {
         startActivity(
             Intent(this, PlaceDetailActivity::class.java).apply {
-                putExtra("placeId",placeId)
+                putExtra("placeId", placeId)
+                putExtra("name", name)
                 putExtra("distance", distance)
+                putExtra("address", address)
+                putExtra("category", category)
             }
         )
     }
+
+
 }

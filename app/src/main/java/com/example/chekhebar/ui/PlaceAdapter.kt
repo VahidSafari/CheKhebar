@@ -40,11 +40,23 @@ class PlaceAdapter(
         holder.itemView.tag = getItem(position)
         holder.holderBinding.placeView = item
         holder.itemView.setOnClickListener {
-            openDetailActivity.openDetailActivity(item.id, item.distance)
+            openDetailActivity.openDetailActivity(
+                item.id,
+                item.name,
+                item.distance,
+                item.address,
+                item.category
+            )
         }
     }
 
     interface IOpenDetailActivity {
-        fun openDetailActivity(placeId: String, distance: Int)
+        fun openDetailActivity(
+            placeId: String,
+            name: String,
+            distance: Int,
+            address: String,
+            category: String
+        )
     }
 }

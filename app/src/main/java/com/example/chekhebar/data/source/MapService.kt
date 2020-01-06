@@ -13,16 +13,16 @@ interface MapService {
         @Query("ll") latLong: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
-        @Query("client_id") clientId: String = "C5BWYQRSL1EWPQ0IU3D22P3OSKVGHF3SLJJSQR2H0MTVQZAF",
-        @Query("client_secret") clientSecret: String = "KMMQQGDDXCFLYAOJRGUV1QDUWSQURMGAUV3NK0EJRWZ0OUQZ",
+        @Query("client_id") clientId: String = "2XXI1JQRV5XLYYSV5B0N5NY4L0CPFBL4ZCQVKXV1S4O4OY2E",
+        @Query("client_secret") clientSecret: String = "U501IGOROIEEK2DN2WQYNJRKXFZBQDI4SHSQBTBJRFGBDZAC",
         @Query("v") version: String = "20180323"
     ): Response<MainResponse>
 
     @GET("v2/venues/{venueId}")
     suspend fun getPlaceDetails(
         @Path("venueId") placeId: String,
-        @Query("client_id") clientId: String = "C5BWYQRSL1EWPQ0IU3D22P3OSKVGHF3SLJJSQR2H0MTVQZAF",
-        @Query("client_secret") clientSecret: String = "KMMQQGDDXCFLYAOJRGUV1QDUWSQURMGAUV3NK0EJRWZ0OUQZ",
+        @Query("client_id") clientId: String = "2XXI1JQRV5XLYYSV5B0N5NY4L0CPFBL4ZCQVKXV1S4O4OY2E",
+        @Query("client_secret") clientSecret: String = "U501IGOROIEEK2DN2WQYNJRKXFZBQDI4SHSQBTBJRFGBDZAC",
         @Query("v") version: String = "20180323"
     ): Response<PlaceDetailResponse>
 
